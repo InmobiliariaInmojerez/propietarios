@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sistema de Acceso</title>
+    <style>
+        /* Estilos idénticos al original */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(107, 91, 58, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(107, 91, 58, 0.1);
+        }
+        .header {
+            background: #6b5b3a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        .form-container {
+            padding: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #6b5b3a;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6b5b3a;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(107, 91, 58, 0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: #6b5b3a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        .btn:hover {
+            background: #5a4d31;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #6b5b3a;
+            border: 2px solid #6b5b3a;
+        }
+        .btn-secondary:hover {
+            background: #6b5b3a;
+            color: white;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .success-message {
+            color: #27ae60;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .dashboard {
+            display: none;
+            text-align: center;
+        }
+        .dashboard.active {
+            display: block;
+        }
+        .welcome-message {
+            font-size: 1.2rem;
+            color: #6b5b3a;
+            margin-bottom: 1rem;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #6b5b3a;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            width: auto;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .menu-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .menu-header h2 {
+            color: #6b5b3a;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+        .menu-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            text-align: left;
+            padding: 1.25rem;
+            background: white;
+            border: 2px solid #e1e1e1;
+            color: #333;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .menu-btn:hover {
+            background: #6b5b3a;
+            color: white;
+            border-color: #6b5b3a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(107, 91, 58, 0.2);
+        }
+        .menu-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+        .menu-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .menu-text strong {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .menu-text span {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        .menu-btn:hover .menu-text span {
+            opacity: 1;
+        }
+        .input-valid {
+            border-color: #27ae60 !important;
+        }
+        .input-invalid {
+            border-color: #e74c3c !important;
+        }
+        @media (max-width: 480px) {
+            .container {
+                margin: 1rem;
+                border-radius: 8px;
+            }
+            .header {
+                padding: 1.5rem;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inmobiliaria INMOJEREZ</h1>
+            <p>Bienvenido al sistema</p>
+        </div>
+        <!-- Formulario de Inicio de Sesión -->
+        <div id="loginSection" class="form-section active">
+            <div class="form-container">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo Electrónico</label>
+                        <input type="email" id="loginEmail" name="email" required>
+                        <div class="error-message" id="loginEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                        <div class="error-message" id="loginPasswordError"></div>
+                    </div>
+                    <button type="submit" class="btn">Iniciar Sesión</button>
+                    <div class="error-message" id="loginError"></div>
+                    <div class="success-message" id="loginSuccess"></div>
+                </form>
+            </div>
+        </div>
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="form-container">
+                <div class="welcome-message">¡Bienvenido!</div>
+                <div class="user-info" id="userInfo"></div>
+                <button type="button" class="btn logout-btn" onclick="logout()">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+        <!-- Menú Principal -->
+        <div id="mainMenu" class="form-section">
+            <div class="form-container">
+                <div class="menu-header">
+                    <h2>Gestión de Propietarios</h2>
+                    <p>Selecciona una opción para continuar</p>
+                </div>
+                <div class="menu-options">
+                    <button type="button" class="btn menu-btn" onclick="showOwnerRegistration()">
+                        <div class="menu-icon">👤</div>
+                        <div class="menu-text">
+                            <strong>Registro de Propietarios</strong>
+                            <span>Agregar nuevos propietarios al sistema</span>
+                        </div>
+                    </button>
+                    <button type="button" class="btn menu-btn" onclick="showOwnerConsultation()">
+                        <div class="menu-icon">🔍</div>
+                        <div class="menu-text">
+                            <strong>Consulta de Propietarios</strong>
+                            <span>Buscar y ver información de propietarios</span>
+                        </div>
+                    </button>
+                    <button type="button" class="btn menu-btn" onclick="showOwnerUpdate()">
+                        <div class="menu-icon">✏️</div>
+                        <div class="menu-text">
+                            <strong>Actualizar Datos</strong>
+                            <span>Modificar información de propietarios</span>
+                        </div>
+                    </button>
+                    <button type="button" class="btn menu-btn" onclick="showOwnerDelete()">
+                        <div class="menu-icon">🗑️</div>
+                        <div class="menu-text">
+                            <strong>Eliminar Propietario</strong>
+                            <span>Remover propietarios del sistema</span>
+                        </div>
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="button" class="btn logout-btn" onclick="logout()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Usuarios predefinidos - Solo estos tienen acceso
+        const users = [
+            {
+                id: 1,
+                name: "Admin Principal",
+                email: "admin@inmojerez.com",
+                password: "admin123",
+                registrationDate: "2024-01-15 10:00:00"
+            },
+            {
+                id: 2,
+                name: "Julio González",
+                email: "julio@inmojerez.com",
+                password: "julio123",
+                registrationDate: "2024-01-20 14:30:00"
+            },
+            {
+                id: 3,
+                name: "María López",
+                email: "maria@inmojerez.com",
+                password: "maria123",
+                registrationDate: "2024-01-25 09:15:00"
+            },
+            {
+                id: 4,
+                name: "Carlos Mendoza",
+                email: "carlos@inmojerez.com",
+                password: "carlos123",
+                registrationDate: "2024-02-01 11:45:00"
+            }
+        ];
+        
+        let currentUser = null;
+
+        function showLogin() {
+            document.getElementById('loginSection').classList.add('active');
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('mainMenu').classList.remove('active');
+            clearMessages();
+        }
+
+        function showDashboard() {
+            document.getElementById('mainMenu').classList.add('active');
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('dashboard').classList.remove('active');
+            updateUserInfo();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainMenu').classList.remove('active');
+            showLogin();
+            clearForms();
+        }
+
+        // Funciones del menú principal
+        function showOwnerRegistration() {
+            alert('Función de Registro de Propietarios\nEsta función permitirá registrar nuevos propietarios en el sistema.');
+            window.location.href = "./registro.html";
+        }
+
+        function showOwnerConsultation() {
+            alert('Función de Consulta de Propietarios\nEsta función permitirá buscar y consultar información de propietarios existentes.');
+            window.location.href = "./consulta.html";
+        }
+
+        function showOwnerUpdate() {
+            alert('Función de Actualizar Datos\nEsta función permitirá modificar la información de propietarios registrados.');
+            window.location.href = "./actualizar.html";
+        }
+
+        function showOwnerDelete() {
+            alert('Función de Eliminar Propietario\nEsta función permitirá remover propietarios del sistema.');
+            window.location.href = "./eliminar.html";
+        }
+
+        // Validaciones
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 6;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            const input = element.previousElementSibling;
+            if (input && input.tagName === 'INPUT') {
+                input.classList.add('input-invalid');
+                input.classList.remove('input-valid');
+            }
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function clearMessages() {
+            const errorMessages = document.querySelectorAll('.error-message, .success-message');
+            errorMessages.forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.classList.remove('input-invalid', 'input-valid');
+            });
+        }
+
+        function clearForms() {
+            document.getElementById('loginForm').reset();
+            clearMessages();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    this.classList.remove('input-invalid');
+                    const errorElement = document.getElementById(this.id + 'Error');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            clearMessages();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            let isValid = true;
+
+            if (!validateEmail(email)) {
+                showError('loginEmailError', 'Ingresa un correo electrónico válido');
+                isValid = false;
+            }
+
+            if (!validatePassword(password)) {
+                showError('loginPasswordError', 'La contraseña debe tener al menos 6 caracteres');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    currentUser = user;
+                    showSuccess('loginSuccess', 'Iniciando sesión...');
+                    document.querySelectorAll('#loginForm input').forEach(input => {
+                        input.classList.add('input-valid');
+                    });
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 1000);
+                } else {
+                    showError('loginError', 'Credenciales incorrectas. Contacta al administrador si necesitas acceso.');
+                }
+            }
+        });
+
+        function updateUserInfo() {
+            if (currentUser) {
+                const userInfoElement = document.getElementById('userInfo');
+                if (userInfoElement) {
+                    userInfoElement.innerHTML = `
+                        <strong>Nombre:</strong> ${currentUser.name}<br>
+                        <strong>Email:</strong> ${currentUser.email}<br>
+                        <strong>Fecha de registro:</strong> ${currentUser.registrationDate}
+                    `;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

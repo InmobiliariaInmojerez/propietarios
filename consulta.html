@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consulta de Propietarios | INMOJEREZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fafafa;
+      color: #2c2c2c;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .container {
+      max-width: 1500px;
+      margin: 3rem auto;
+      background-color: #ffffff;
+      padding: 3rem;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-top: 3px solid #6b5b3a;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid #e5e5e5;
+      padding-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-family: 'Inter', sans-serif;
+      color: #6b5b3a;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .busqueda {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto;
+      gap: 1rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background-color: #f8f8f8;
+      border-radius: 2px;
+      border-left: 3px solid #6b5b3a;
+    }
+
+    .busqueda input {
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d1d1;
+      border-radius: 2px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s ease;
+      background-color: #ffffff;
+    }
+
+    .busqueda input:focus {
+      outline: none;
+      border-color: #6b5b3a;
+    }
+
+    .busqueda button {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .busqueda button:first-of-type {
+      background-color: #6b5b3a;
+      color: white;
+    }
+
+    .busqueda button:first-of-type:hover {
+      background-color: #5a4a2e;
+    }
+
+    .busqueda button:last-of-type {
+      background-color: transparent;
+      color: #6b5b3a;
+      border: 1px solid #6b5b3a;
+    }
+
+    .busqueda button:last-of-type:hover {
+      background-color: #6b5b3a;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: #6b5b3a;
+    }
+
+    th {
+      padding: 1rem 1.5rem;
+      color: white;
+      font-weight: 500;
+      text-align: left;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+    }
+
+    td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e5e5e5;
+      font-weight: 300;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background-color: #f8f8f8;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .mensaje {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 2rem;
+      padding: 2rem;
+      background-color: #f8f8f8;
+      border-radius: 2px;
+      font-weight: 300;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      .busqueda {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      table {
+        font-size: 0.8rem;
+      }
+
+      th, td {
+        padding: 0.75rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>Consulta de Propietarios</h1>
+      <p>Sistema de gestión inmobiliaria</p>
+    </div>
+
+    <div class="busqueda">
+      <input type="text" id="filtro-curp" placeholder="Buscar por CURP">
+      <input type="text" id="filtro-ciudad" placeholder="Buscar por Ciudad">
+      <button onclick="filtrar()">Buscar</button>
+      <button onclick="mostrarTodos()">Limpiar</button>
+    </div>
+
+    <table id="tabla-propietarios">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellidos</th>
+          <th>Email</th>
+          <th>CURP</th>
+          <th>Fecha Nac.</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Código Postal</th>
+          <th>Ciudad</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Se genera dinámicamente -->
+      </tbody>
+    </table>
+
+    <p class="mensaje" id="mensaje-vacio" style="display: none;">No se encontraron resultados para los filtros aplicados.</p>
+  </div>
+
+  <script>
+    const propietarios = [
+      {
+        nombre: "Luis",
+        apellidos: "Martínez",
+        email: "luis@gmail.com",
+        curp: "MALU850101HDFRLS01",
+        nacimiento: "1985-01-01",
+        telefono: "5523456789",
+        direccion: "Calle Falsa 123",
+        cp: "11200",
+        ciudad: "Jerez",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Ana",
+        apellidos: "Gómez",
+        email: "ana@gmail.com",
+        curp: "GOAN920202MDFRRN02",
+        nacimiento: "1992-02-02",
+        telefono: "5545678910",
+        direccion: "Av. Reforma 456",
+        cp: "11300",
+        ciudad: "Jerez",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Pedro",
+        apellidos: "Lopez",
+        email: "pedro@gmail.com",
+        curp: "LOPE910101HDFRRR03",
+        nacimiento: "1991-01-01",
+        telefono: "5533334444",
+        direccion: "Calle Principal 89",
+        cp: "11400",
+        ciudad: "Guadalajara",
+        estado: "Jalisco"
+      },
+      {
+        nombre: "María",
+        apellidos: "Rodríguez",
+        email: "maria@gmail.com",
+        curp: "ROMA880315MDFDRR04",
+        nacimiento: "1988-03-15",
+        telefono: "5544556677",
+        direccion: "Av. Juárez 234",
+        cp: "11500",
+        ciudad: "Aguascalientes",
+        estado: "Aguascalientes"
+      },
+      {
+        nombre: "Carlos",
+        apellidos: "Hernández",
+        email: "carlos@gmail.com",
+        curp: "HECA790620HDFRRR05",
+        nacimiento: "1979-06-20",
+        telefono: "5577889900",
+        direccion: "Calle Hidalgo 567",
+        cp: "11600",
+        ciudad: "Zacatecas",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Sofía",
+        apellidos: "García",
+        email: "sofia@gmail.com",
+        curp: "GASO931025MDFRCF06",
+        nacimiento: "1993-10-25",
+        telefono: "5566778899",
+        direccion: "Blvd. López Mateos 890",
+        cp: "11700",
+        ciudad: "León",
+        estado: "Guanajuato"
+      },
+      {
+        nombre: "Jorge",
+        apellidos: "Morales",
+        email: "jorge@gmail.com",
+        curp: "MOJO860405HDFRRR07",
+        nacimiento: "1986-04-05",
+        telefono: "5588990011",
+        direccion: "Calle Morelos 123",
+        cp: "11800",
+        ciudad: "Jerez",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Elena",
+        apellidos: "Vásquez",
+        email: "elena@gmail.com",
+        curp: "VAEL900712MDFSSL08",
+        nacimiento: "1990-07-12",
+        telefono: "5599001122",
+        direccion: "Av. Constitución 456",
+        cp: "11900",
+        ciudad: "Guadalajara",
+        estado: "Jalisco"
+      },
+      {
+        nombre: "Roberto",
+        apellidos: "Jiménez",
+        email: "roberto@gmail.com",
+        curp: "JIRO751130HDFMRB09",
+        nacimiento: "1975-11-30",
+        telefono: "5511223344",
+        direccion: "Calle Independencia 789",
+        cp: "12000",
+        ciudad: "Querétaro",
+        estado: "Querétaro"
+      },
+      {
+        nombre: "Lucía",
+        apellidos: "Mendoza",
+        email: "lucia@gmail.com",
+        curp: "MELU941008MDFNDC10",
+        nacimiento: "1994-10-08",
+        telefono: "5522334455",
+        direccion: "Av. Revolución 321",
+        cp: "12100",
+        ciudad: "San Luis Potosí",
+        estado: "San Luis Potosí"
+      },
+      {
+        nombre: "Fernando",
+        apellidos: "Castro",
+        email: "fernando@gmail.com",
+        curp: "CAFE820918HDFSTR11",
+        nacimiento: "1982-09-18",
+        telefono: "5533445566",
+        direccion: "Calle 5 de Mayo 654",
+        cp: "12200",
+        ciudad: "Aguascalientes",
+        estado: "Aguascalientes"
+      },
+      {
+        nombre: "Gabriela",
+        apellidos: "Ramos",
+        email: "gabriela@gmail.com",
+        curp: "RAGA890504MDFMRB12",
+        nacimiento: "1989-05-04",
+        telefono: "5544556677",
+        direccion: "Av. Universidad 987",
+        cp: "12300",
+        ciudad: "Zacatecas",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Diego",
+        apellidos: "Torres",
+        email: "diego@gmail.com",
+        curp: "TODI911201HDFRRR13",
+        nacimiento: "1991-12-01",
+        telefono: "5555667788",
+        direccion: "Calle Allende 147",
+        cp: "12400",
+        ciudad: "León",
+        estado: "Guanajuato"
+      },
+      {
+        nombre: "Valentina",
+        apellidos: "Herrera",
+        email: "valentina@gmail.com",
+        curp: "HEVA960823MDFRRR14",
+        nacimiento: "1996-08-23",
+        telefono: "5566778899",
+        direccion: "Blvd. Zacatecas 258",
+        cp: "12500",
+        ciudad: "Jerez",
+        estado: "Zacatecas"
+      },
+      {
+        nombre: "Alejandro",
+        apellidos: "Sánchez",
+        email: "alejandro@gmail.com",
+        curp: "SAAL871106HDFNCL15",
+        nacimiento: "1987-11-06",
+        telefono: "5577889900",
+        direccion: "Calle Guerrero 369",
+        cp: "12600",
+        ciudad: "Guadalajara",
+        estado: "Jalisco"
+      },
+      {
+        nombre: "Isabella",
+        apellidos: "Ortega",
+        email: "isabella@gmail.com",
+        curp: "ORIS950714MDFRTG16",
+        nacimiento: "1995-07-14",
+        telefono: "5588990011",
+        direccion: "Av. Madero 741",
+        cp: "12700",
+        ciudad: "Querétaro",
+        estado: "Querétaro"
+      },
+      {
+        nombre: "Miguel",
+        apellidos: "Flores",
+        email: "miguel@gmail.com",
+        curp: "FLMI831029HDFRRR17",
+        nacimiento: "1983-10-29",
+        telefono: "5599001122",
+        direccion: "Calle Victoria 852",
+        cp: "12800",
+        ciudad: "San Luis Potosí",
+        estado: "San Luis Potosí"
+      },
+      {
+        nombre: "Camila",
+        apellidos: "Vargas",
+        email: "camila@gmail.com",
+        curp: "VACA921215MDFRRG18",
+        nacimiento: "1992-12-15",
+        telefono: "5511223344",
+        direccion: "Av. Tecnológico 963",
+        cp: "12900",
+        ciudad: "Aguascalientes",
+        estado: "Aguascalientes"
+      }
+    ];
+
+    const tbody = document.querySelector("#tabla-propietarios tbody");
+    const mensajeVacio = document.getElementById("mensaje-vacio");
+
+    function renderizar(lista) {
+      tbody.innerHTML = "";
+      mensajeVacio.style.display = lista.length === 0 ? "block" : "none";
+
+      lista.forEach(p => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${p.nombre}</td>
+          <td>${p.apellidos}</td>
+          <td>${p.email}</td>
+          <td>${p.curp}</td>
+          <td>${p.nacimiento}</td>
+          <td>${p.telefono}</td>
+          <td>${p.direccion}</td>
+          <td>${p.cp}</td>
+          <td>${p.ciudad}</td>
+          <td>${p.estado}</td>
+        `;
+        tbody.appendChild(fila);
+      });
+    }
+
+    function filtrar() {
+      const curp = document.getElementById("filtro-curp").value.toLowerCase();
+      const ciudad = document.getElementById("filtro-ciudad").value.toLowerCase();
+
+      const filtrados = propietarios.filter(p =>
+        p.curp.toLowerCase().includes(curp) &&
+        p.ciudad.toLowerCase().includes(ciudad)
+      );
+
+      renderizar(filtrados);
+    }
+
+    function mostrarTodos() {
+      document.getElementById("filtro-curp").value = "";
+      document.getElementById("filtro-ciudad").value = "";
+      renderizar(propietarios);
+    }
+
+    // Mostrar todos al iniciar
+    renderizar(propietarios);
+  </script>
+
+</body>
+</html>

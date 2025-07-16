@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editar Propietario | INMOJEREZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fafafa;
+      color: #2c2c2c;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .header {
+      background-color: #6b5b3a;
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 3rem;
+      background-color: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-top: 3px solid #6b5b3a;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .page-title p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #6b5b3a;
+      letter-spacing: -0.3px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6b5b3a;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d1d1;
+      border-radius: 2px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      transition: all 0.2s ease;
+      background-color: #ffffff;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #6b5b3a;
+      box-shadow: 0 0 0 2px rgba(107, 91, 58, 0.1);
+    }
+
+    input:hover {
+      border-color: #8a7555;
+    }
+
+    .button {
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      background-color: #6b5b3a;
+      color: white;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 1rem;
+    }
+
+    .button:hover {
+      background-color: #5a4a2e;
+      transform: translateY(-1px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .button-secondary {
+      background-color: transparent;
+      color: #6b5b3a;
+      border: 1px solid #6b5b3a;
+    }
+
+    .button-secondary:hover {
+      background-color: #6b5b3a;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .success-message {
+      background-color: #f8fdf8;
+      border: 1px solid #4caf50;
+      color: #2e7d32;
+      padding: 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .page-title p {
+        font-size: 1.3rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+
+    /* Estilos específicos para campos especiales */
+    input[type="email"] {
+      color: #6b5b3a;
+    }
+
+    input[type="date"] {
+      color: #6b5b3a;
+    }
+
+    input[readonly] {
+      background-color: #f8f8f8;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Inmobiliaria INMOJEREZ</h1>
+  </div> 
+
+  <div class="container">
+    <div class="page-title">
+      <p>Editar Propietario</p>
+    </div>
+
+    <div class="success-message" id="success-message">
+      Propietario actualizado correctamente
+    </div>
+
+    <form id="editar-propietario">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" value="Luis" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="apellidos">Apellidos</label>
+          <input id="apellidos" name="apellidos" type="text" value="Martínez" required />
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" value="luis@gmail.com" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="curp">CURP</label>
+          <input id="curp" name="curp" type="text" maxlength="18" value="MALU850101HDFRLS01" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="nacimiento">Fecha de nacimiento</label>
+          <input id="nacimiento" name="nacimiento" type="date" value="1985-01-01" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" name="telefono" type="tel" value="5523456789" required maxlength="10" />
+        </div>
+        
+        <div class="form-group">
+          <label for="cp">Código Postal</label>
+          <input id="cp" name="cp" type="text" value="11200" maxlength="5" />
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="direccion">Dirección</label>
+          <input id="direccion" name="direccion" type="text" value="Calle Falsa 123" />
+        </div>
+        
+        <div class="form-group">
+          <label for="ciudad">Ciudad</label>
+          <input id="ciudad" name="ciudad" type="text" value="Jerez" />
+        </div>
+        
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <input id="estado" name="estado" type="text" value="Zacatecas" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="button button-secondary" onclick="cancelar()">Cancelar</button>
+        <button type="submit" class="button">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Simulación de envío de cambios
+    document.getElementById('editar-propietario').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Mostrar mensaje de éxito
+      const successMessage = document.getElementById('success-message');
+      successMessage.style.display = 'block';
+      
+      // Scroll suave al mensaje
+      successMessage.scrollIntoView({ behavior: 'smooth' });
+      
+      // Ocultar el mensaje después de 3 segundos
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 3000);
+    });
+
+    function cancelar() {
+      if (confirm('¿Está seguro de que desea cancelar? Los cambios no guardados se perderán.')) {
+        // Aquí podrías redirigir a la página anterior
+        window.history.back();
+      }
+    }
+
+    // Validación en tiempo real del CURP
+    document.getElementById('curp').addEventListener('input', function(e) {
+      const curp = e.target.value.toUpperCase();
+      e.target.value = curp;
+      
+      if (curp.length === 18) {
+        // Validación básica del formato CURP
+        const curpRegex = /^[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9]{2}$/;
+        if (!curpRegex.test(curp)) {
+          e.target.style.borderColor = '#e53935';
+        } else {
+          e.target.style.borderColor = '#4caf50';
+        }
+      } else {
+        e.target.style.borderColor = '#d1d1d1';
+      }
+    });
+
+    // Validación del teléfono
+    document.getElementById('telefono').addEventListener('input', function(e) {
+      const telefono = e.target.value.replace(/\D/g, '');
+      e.target.value = telefono;
+      
+      if (telefono.length === 10) {
+        e.target.style.borderColor = '#4caf50';
+      } else {
+        e.target.style.borderColor = '#d1d1d1';
+      }
+    });
+
+    // Validación del código postal
+    document.getElementById('cp').addEventListener('input', function(e) {
+      const cp = e.target.value.replace(/\D/g, '');
+      e.target.value = cp;
+    });
+  </script>
+</body>
+</html>
